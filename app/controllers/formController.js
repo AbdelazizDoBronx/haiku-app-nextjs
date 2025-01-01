@@ -1,5 +1,10 @@
 'use server'
 
+import { getCollection } from "@/lib/db";
+import bcrypt from 'bcrypt'
+import { cookies } from "next/headers";
+import jwt from 'jsonwebtoken';
+
 export const register = async function (prevState,formData) {
     
     const errors = {};
@@ -21,9 +26,30 @@ export const register = async function (prevState,formData) {
     if(errors.username){
         return {
             status : 'error',
-            data : {username:errors.username,password:errors.password}
+            data : errors
         }
     }
+
+    // password hashing
+    const salt = bcrypt.genSaltSync(10);
+    newUser.password = bcrypt.hashSync(newUser.password,salt)
+
+
+    const userCollection = await getCollection('users');
+    const newInsertedUser = await userCollection.insertOne(newUser);
+    const userId = newInsertedUser.insertedId.toString();
+
+    // jsonwebtoken 
+    const jsonToken = jwt.sign({userId},{expiresIn : '24h'},'1234Kjhdhnm')
+
+
+    // make a cookie
+    cookies().set('HaikuUser',jsonToken,{
+        httpOnly : true,
+        sameSite : 'strict',
+        secure : true,
+        expires : 1000*60*60*24
+    })
 
     return {
         status : 'success'

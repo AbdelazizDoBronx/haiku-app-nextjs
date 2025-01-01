@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useActionState } from 'react'
 import { useFormState } from 'react-dom'
 import { register } from '../controllers/formController'
 import Alertjsx from './Alertjsx'
@@ -7,7 +7,7 @@ import Alertjsx from './Alertjsx'
 const FormComponent = () => {
  
 
-  const [formState,formAction] = useFormState(register,{})
+  const [formState,formAction] = useActionState(register,{})
 
   console.log(formState)
   return (
