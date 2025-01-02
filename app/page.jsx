@@ -1,10 +1,21 @@
-import React from 'react'
+import React, { use } from 'react'
 import FormComponent from './components/FormComponent'
-const Home = () => {
+import { verifyToken } from '@/lib/tokenVerfy';
+import Header from './components/Header';
+const Home = async () => {
+  const user = await verifyToken();
   return (
     <div className='max-w-5xl mx-auto p-5 flex justify-center items-center flex-col gap-5'>
-      <h3 className='text-3xl text-center font-semibold'>Login to your account</h3>
-      <FormComponent/>
+      <Header/>
+      {user && (
+        <h2>Welcome to your Account!</h2>
+      )}
+      {!user && (
+        <>
+          <h3 className='text-3xl text-center font-semibold'>Login to your account</h3>
+          <FormComponent/>
+        </>
+      )}
     </div>
   )
 }
