@@ -1,13 +1,13 @@
 'use client'
 
 import React, { useActionState } from 'react'
-import { register } from '../controllers/formController'
+import { createHaiku } from '../controllers/haikuController'
 
 
 
 const HaikuForm = () => {
     
-    const [formState,formAction] = useActionState(register,{})
+    const [formState,formAction] = useActionState(createHaiku,{})
 
   return (
     <div>
